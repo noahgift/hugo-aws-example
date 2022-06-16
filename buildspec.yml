@@ -1,0 +1,28 @@
+version: 0.1
+
+environment_variables:
+  plaintext:
+    HUGO_VERSION: "0.42"
+
+phases:
+  install:
+    commands:
+      - cd /tmp
+      - wget https://github.com/gohugoio/hugo/releases/\
+      download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_Linux-64bit.tar.gz
+      - tar -xzf hugo_${HUGO_VERSION}_Linux-64bit.tar.gz
+      - mv hugo /usr/bin/hugo
+      - cd -
+      - rm -rf /tmp/*
+  build:
+    commands:
+      - rm -rf public
+      - hugo
+  post_build:
+    commands:
+      - aws s3 sync public/ s3://<yourwebsite>.com/ --region us-west-2 --delete
+      - aws s3 cp s3://<yourwebsite>.com/\
+      s3://<yourwebsite>.com/ --metadata-directive REPLACE \
+        --cache-control 'max-age=604800' --recursive
+      - aws cloudfront create-invalidation --distribution-id=<YOURID> --paths '/*'
+      - echo Build completed on `date`
