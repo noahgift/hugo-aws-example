@@ -4,4 +4,4 @@ Continuous Delivery Hugo Example
 
 ## References
 
-* Walkthrough with [AWS and Cloud9](https://www.youtube.com/watch?v=j50buxfFEkA)
+* [Walkthrough YouTube](https://youtu.be/I-HTdojGdHs)
